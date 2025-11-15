@@ -25,16 +25,5 @@ fun CategoryColumnScreen(vm: StoreViewModel, nav: NavController) {
         nav.navigate(StoreRoutes.ProductDetails.create(item.id))
       }
     }
-
-    item {
-      Button(
-        onClick = { nav.navigate(StoreRoutes.CategoryCarousel.route) },
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp)
-      ) {
-        Text("Go to Carousel")
-      }
-    }
   }
 }
