@@ -15,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.example.jetpack.store.viewmodel.StoreViewModel
 import com.example.jetpack.store.navigation.StoreRoutes
@@ -33,30 +35,35 @@ fun CategoryCarouselScreen(vm: StoreViewModel, nav: NavController) {
   val scope = rememberCoroutineScope()
 
   Column(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxSize(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     HorizontalPager(
       state = pagerState,
       modifier = Modifier
         .fillMaxWidth()
-        .height(320.dp),
-      contentPadding = PaddingValues(horizontal = 48.dp),
+        .height(350.dp),
+      contentPadding = PaddingValues(horizontal = 80.dp),
       pageSpacing = 16.dp
     ) { page ->
       val product = vm.productsCarousel[page]
-      val scale = if (pagerState.currentPage == page) 1f else 0.85f
+      val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+      val scale = if (pagerState.currentPage == page) 1f else 0.8f
+      val alpha = if (pagerState.currentPage == page) 1f else 0.6f
 
       Card(
         modifier = Modifier
           .fillMaxHeight()
-          .width(220.dp)
+          .width(240.dp)
           .scale(scale)
+          .alpha(alpha)
           .clickable {
             nav.navigate(StoreRoutes.ProductDetails.create(product.id))
           },
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+          defaultElevation = if (pagerState.currentPage == page) 16.dp else 8.dp
+        )
       ) {
         Column(
           modifier = Modifier
@@ -70,26 +77,27 @@ fun CategoryCarouselScreen(vm: StoreViewModel, nav: NavController) {
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-              .height(140.dp)
+              .height(160.dp)
               .fillMaxWidth()
               .clip(RoundedCornerShape(12.dp))
           )
           Spacer(modifier = Modifier.height(12.dp))
-          Text(product.name, style = MaterialTheme.typography.titleMedium)
-          Text("${product.price}", style = MaterialTheme.typography.bodyMedium)
-          Spacer(modifier = Modifier.height(8.dp))
-          Button(onClick = {
-            nav.navigate(StoreRoutes.ProductDetails.create(product.id))
-          }) {
-            Text("Details")
-          }
+          Text(
+            product.name,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+          )
+          Text(
+            "$${product.price}",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary
+          )
         }
       }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(20.dp))
 
-    // Page indicator dots
     Row(
       horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically
@@ -99,11 +107,14 @@ fun CategoryCarouselScreen(vm: StoreViewModel, nav: NavController) {
         Box(
           modifier = Modifier
             .padding(4.dp)
-            .size(if (isSelected) 10.dp else 6.dp)
+            .size(if (isSelected) 12.dp else 8.dp)
             .clip(RoundedCornerShape(50))
-            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray)
+            .background(
+              if (isSelected) MaterialTheme.colorScheme.primary
+              else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
             .clickable {
-              scope.launch { pagerState.scrollToPage(index) }
+              scope.launch { pagerState.animateScrollToPage(index) }
             }
         )
       }

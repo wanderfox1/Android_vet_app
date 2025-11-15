@@ -20,7 +20,7 @@ sealed class StoreRoutes(val route: String) {
 }
 
 @Composable
-fun StoreNavGraph(navController: NavHostController, vm: StoreViewModel) {
+fun StoreNavGraph(navController: NavHostController, vm: StoreViewModel, startDestination: String) {
   NavHost(navController = navController, startDestination = StoreRoutes.CategoryColumn.route) {
 
     composable(StoreRoutes.CategoryColumn.route) {

@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.jetpack.store.model.Product
 import com.example.jetpack.store.navigation.StoreRoutes
 import com.example.jetpack.store.viewmodel.StoreViewModel
 
@@ -19,7 +18,7 @@ fun CategoryColumnScreen(vm: StoreViewModel, nav: NavController) {
   LazyColumn {
     itemsIndexed(vm.productsColumn) { index, item ->
       if ((index + 1) % 5 == 0) {
-        AdCard() // just call it directly
+        AdCard()
       }
 
       ProductCardColumn(product = item) {
