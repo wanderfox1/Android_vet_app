@@ -1,0 +1,16 @@
+<resources>
+  <string name="app_name">Pet Profile</string>
+  <string name="create_profile">Создание профиля питомца</string>
+  <string name="pet_name_label">Имя питомца</string>
+  <string name="pet_age_label">Возраст</string>
+  <string name="pet_breed_label">Порода</string>
+  <string name="pet_weight_label">Вес</string>
+  <string name="pet_vaccinations_label">Прививки</string>
+  <string name="favorite_food">Любимая еда</string>
+  <string name="description">Описание</string>
+  <string name="name_example">Томас</string>
+  <string name="breed_example">Вислоухий</string>
+  <string name="save">Сохранить</string>
+  <string name="edit">Редактировать</string>
+  <string name="share">Поделиться</string>
+</resources>
