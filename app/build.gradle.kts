@@ -38,10 +38,21 @@ android {
 }
 
 dependencies {
+  // Room
   val roomVersion = "2.6.1"
+  implementation("androidx.room:room-runtime:$roomVersion")
   implementation("androidx.room:room-ktx:$roomVersion")
   kapt("androidx.room:room-compiler:$roomVersion")
-  implementation( "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+
+  // LiveData
+  implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
+
+  // Coroutines
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+  // Activity Compose
+  implementation("androidx.activity:activity-compose:1.9.0")
   implementation("androidx.compose.foundation:foundation:1.6.0")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
   implementation("androidx.activity:activity-compose:1.8.2")
