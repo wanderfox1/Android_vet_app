@@ -1,51 +1,75 @@
 package com.example.jetpack.store.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
-import com.example.jetpack.R
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import com.example.jetpack.store.database.StoreDatabase
+import com.example.jetpack.store.model.Category
 import com.example.jetpack.store.model.Product
+import com.example.jetpack.store.repository.StoreRepository
+import kotlinx.coroutines.launch
 
-class StoreViewModel : ViewModel() {
+class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
-  val productsColumn = List(6) {
-    Product(
-      id = it,
-      name = "Product $it",
-      price = "$${10 + it}",
-      image = R.drawable.pet_secondary,
-      description = "Description for product $it"
-    )
-  }
+  private val repository: StoreRepository
 
-  val productsGrid = List(6) {
-    Product(
-      id = 100 + it,
-      name = "Grid Product $it",
-      price = "$${20 + it}",
-      image = R.drawable.pet_secondary,
-      description = "Description for grid product $it"
-    )
-  }
-
-  val productsCarousel = List(6) {
-    Product(
-      id = 200 + it,
-      name = "Carousel Product $it",
-      price = "$${30 + it}",
-      image = R.drawable.pet_secondary,
-      description = "Description for carousel product $it"
-    )
-  }
+  val allCategories: LiveData<List<Category>>
+  val allProducts: LiveData<List<Product>>
 
   val favorites = mutableStateListOf<Product>()
   val cart = mutableStateListOf<Product>()
 
-  private val allProducts = productsColumn + productsGrid + productsCarousel
-
-  fun getProduct(id: Int): Product? {
-    return allProducts.find { it.id == id }
+  init {
+    val database = StoreDatabase.getDatabase(application)
+    repository = StoreRepository(
+      database.categoryDao(),
+      database.productDao()
+    )
+    allCategories = repository.allCategories
+    allProducts = repository.allProducts
   }
 
+  // Category operations
+  fun insertCategory(category: Category) = viewModelScope.launch {
+    repository.insertCategory(category)
+  }
+
+  fun updateCategory(category: Category) = viewModelScope.launch {
+    repository.updateCategory(category)
+  }
+
+  fun deleteCategory(category: Category) = viewModelScope.launch {
+    repository.deleteCategory(category)
+  }
+
+  suspend fun getCategoryById(id: Int): Category? {
+    return repository.getCategoryById(id)
+  }
+
+  // Product operations
+  fun insertProduct(product: Product) = viewModelScope.launch {
+    repository.insertProduct(product)
+  }
+
+  fun updateProduct(product: Product) = viewModelScope.launch {
+    repository.updateProduct(product)
+  }
+
+  fun deleteProduct(product: Product) = viewModelScope.launch {
+    repository.deleteProduct(product)
+  }
+
+  suspend fun getProductById(id: Int): Product? {
+    return repository.getProductById(id)
+  }
+
+  fun getProductsByCategory(categoryId: Int): LiveData<List<Product>> {
+    return repository.getProductsByCategory(categoryId)
+  }
+
+  // Favorites and Cart operations
   fun toggleFavorite(product: Product) {
     if (favorites.contains(product)) favorites.remove(product)
     else favorites.add(product)

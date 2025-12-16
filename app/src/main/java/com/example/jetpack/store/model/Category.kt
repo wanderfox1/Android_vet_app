@@ -1,42 +1,23 @@
 package com.example.jetpack.store.model
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
-  tableName = "products",
-  foreignKeys = [
-    ForeignKey(
-      entity = Category::class,
-      parentColumns = ["id"],
-      childColumns = ["categoryId"],
-      onDelete = ForeignKey.CASCADE
-    )
-  ],
-  indices = [Index(value = ["categoryId"])]
-)
-data class Product(
+@Entity(tableName = "categories")
+data class Category(
   @PrimaryKey(autoGenerate = true)
   val id: Int = 0,
   val name: String,
-  val price: String,
-  val description: String,
-  val categoryId: Int,
   val imageByteArray: ByteArray? = null
 ) {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as Product
+    other as Category
 
     if (id != other.id) return false
     if (name != other.name) return false
-    if (price != other.price) return false
-    if (description != other.description) return false
-    if (categoryId != other.categoryId) return false
     if (imageByteArray != null) {
       if (other.imageByteArray == null) return false
       if (!imageByteArray.contentEquals(other.imageByteArray)) return false
@@ -48,9 +29,6 @@ data class Product(
   override fun hashCode(): Int {
     var result = id
     result = 31 * result + name.hashCode()
-    result = 31 * result + price.hashCode()
-    result = 31 * result + description.hashCode()
-    result = 31 * result + categoryId
     result = 31 * result + (imageByteArray?.contentHashCode() ?: 0)
     return result
   }

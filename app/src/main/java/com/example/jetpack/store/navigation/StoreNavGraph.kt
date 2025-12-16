@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.jetpack.store.ui.CategoryCarouselScreen
-import com.example.jetpack.store.ui.CategoryColumnScreen
-import com.example.jetpack.store.ui.CategoryGridScreen
-import com.example.jetpack.store.ui.ProductDetailsScreen
+import com.example.jetpack.store.ui.*
 import com.example.jetpack.store.viewmodel.StoreViewModel
 
 sealed class StoreRoutes(val route: String) {
@@ -17,11 +14,20 @@ sealed class StoreRoutes(val route: String) {
   object ProductDetails : StoreRoutes("details/{id}") {
     fun create(id: Int) = "details/$id"
   }
+  object AddProduct : StoreRoutes("add_product")
+  object AddCategory : StoreRoutes("add_category")
 }
 
 @Composable
-fun StoreNavGraph(navController: NavHostController, vm: StoreViewModel, startDestination: String) {
-  NavHost(navController = navController, startDestination = StoreRoutes.CategoryColumn.route) {
+fun StoreNavGraph(
+  navController: NavHostController,
+  vm: StoreViewModel,
+  startDestination: String
+) {
+  NavHost(
+    navController = navController,
+    startDestination = startDestination
+  ) {
 
     composable(StoreRoutes.CategoryColumn.route) {
       CategoryColumnScreen(vm = vm, nav = navController)
@@ -40,6 +46,14 @@ fun StoreNavGraph(navController: NavHostController, vm: StoreViewModel, startDes
       if (id != null) {
         ProductDetailsScreen(vm = vm, id = id, nav = navController)
       }
+    }
+
+    composable(StoreRoutes.AddProduct.route) {
+      AddProductScreen(vm = vm, nav = navController)
+    }
+
+    composable(StoreRoutes.AddCategory.route) {
+      AddCategoryScreen(vm = vm, nav = navController)
     }
   }
 }

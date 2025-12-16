@@ -38,12 +38,11 @@ android {
 }
 
 dependencies {
-  // Room
   val roomVersion = "2.6.1"
   implementation("androidx.room:room-runtime:$roomVersion")
   implementation("androidx.room:room-ktx:$roomVersion")
   kapt("androidx.room:room-compiler:$roomVersion")
-
+  implementation("androidx.compose.runtime:runtime-livedata:1.6.1")
   // LiveData
   implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
   implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
